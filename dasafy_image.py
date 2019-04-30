@@ -62,10 +62,6 @@ def enhance(image, scale=1.3):
     return enhancer.enhance(scale)
 
 
-# input and output files
-# img = Image.open('IMG_8015.jpg')
-# output = 'dasafied_teresa2.jpg'
-
 # tune parameters
 brightness = 1.4
 ht_sample = 15
@@ -81,7 +77,7 @@ parser.add_argument('filename')
 parser.add_argument('output')
 args = parser.parse_args()
 
-img = open(args.filename)
+img = Image.open(args.filename)
 output = args.output
 
 enhance(apply_gradient(halftone(img, ht_sample, ht_scale, ht_angle), gradient_magnitude, gradient_opacity), brightness)\

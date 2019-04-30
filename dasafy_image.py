@@ -1,7 +1,8 @@
 from PIL import Image, ImageEnhance, ImageDraw, ImageStat
+import argparse
 
 
-def halftone(image, sample, scale, angle=90):
+def halftone(image, sample=2, scale=15, angle=90):
     im = image
     img_grey = im.convert('1')  # Convert to greyscale.
     channel = img_grey.split()[0]  # Get grey pixels.
@@ -38,7 +39,7 @@ def apply_gradient(image, gradient_magnitude=2., initial_opacity=.12):
     width, height = im.size
     alpha_gradient = Image.new('L', (1, height), color=0xFF)
     for x in range(height):
-        a = int((initial_opacity * 255.) * (3. + gradient_magnitude * float(x) / height))
+        a = int((initial_opacity * 255.) * (4 + gradient_magnitude * float(x) / height))
         alpha_gradient.putpixel((0, x), a)
         if a > 0:
             alpha_gradient.putpixel((0, x), a)
@@ -48,7 +49,7 @@ def apply_gradient(image, gradient_magnitude=2., initial_opacity=.12):
     alpha = alpha_gradient.resize(im.size)
 
     # create & apply gradient
-    gradient_im = Image.new('RGBA', (width, height), color=(8,137,221))  # das color
+    gradient_im = Image.new('RGBA', (width, height), color=gradient_color)  # das color
     gradient_im.putalpha(alpha)
 
     # make composite with original image
@@ -62,16 +63,27 @@ def enhance(image, scale=1.3):
 
 
 # input and output files
-img = Image.open('IMG_20190130_185513.jpg')
-output = 'dasafied_networking.jpg'
+# img = Image.open('IMG_8015.jpg')
+# output = 'dasafied_teresa2.jpg'
 
 # tune parameters
-brightness = 1.3
-gradient_magnitude = 2.
-initial_opacity = .12
-ht_sample = 10
+brightness = 1.4
+ht_sample = 15
 ht_scale = 2
-ht_angle = 110
+ht_angle = 35
+gradient_magnitude = .75
+gradient_color = (60, 115, 200)
+gradient_opacity = .13
 
-enhance(apply_gradient(halftone(img, ht_sample, ht_scale, ht_angle), gradient_magnitude, initial_opacity), brightness)\
-    .save(output, 'PNG')
+
+parser = argparse.ArgumentParser()
+parser.add_argument('img')
+parser.add_argument('output')
+args = parser.parse_args()
+
+img = open(args.filename)
+output = args.output
+
+enhance(apply_gradient(halftone(img, ht_sample, ht_scale, ht_angle), gradient_magnitude, gradient_opacity), brightness)\
+   .save(output, 'PNG')
+

@@ -77,7 +77,7 @@ gradient_opacity = .13
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument('img')
+parser.add_argument('filename')
 parser.add_argument('output')
 args = parser.parse_args()
 
